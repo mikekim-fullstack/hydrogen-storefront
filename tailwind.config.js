@@ -5,4 +5,10 @@ import typographyPlugin from '@tailwindcss/typography';
 export default {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   plugins: [formsPlugin, typographyPlugin],
+  // Adding new font-family css
+  fontFamily: {
+    'Comorant': ['Cormorant Garamond', 'serif'],
+    'Monserrat': ['Montserrat', 'sans-serif'],
+    'Poppins': ['Poppins', 'sans-serif'],
+  },
 };
