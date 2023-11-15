@@ -7,8 +7,10 @@ export default {
   plugins: [formsPlugin, typographyPlugin],
   // Adding new font-family css
   fontFamily: {
-    'Comorant': ['Cormorant Garamond', 'serif'],
-    'Monserrat': ['Montserrat', 'sans-serif'],
-    'Poppins': ['Poppins', 'sans-serif'],
+    // 'Comorant': ['Cormorant Garamond', 'serif'],
+    // 'Monserrat': ['Montserrat', 'sans-serif'],
+    // 'poppins': ['Poppins', 'sans-serif'],
+    // 'Poppins': ['Poppins', 'sans-serif'],
+    // 'Noticia': ['Noticia', 'sans-serif'],
   },
 };

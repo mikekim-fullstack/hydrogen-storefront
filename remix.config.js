@@ -16,4 +16,30 @@ module.exports = {
   serverModuleFormat: 'esm',
   serverPlatform: 'neutral',
   serverMinify: process.env.NODE_ENV === 'production',
+
+  // Configs compilation CSS
+  // external sources
+  // optimize: {
+  //   bundle: {
+  //     // ...other configs...
+  //     external: {
+  //       include: ['/public/assets/**/*'],
+  //     },
+  //   },
+  // },
+
+  // Add this section to mark the font file path as external
+  // webpack(config, { env }) {
+  //   if (env === "development") {
+  //     // Add the font file path to the external array
+  //     config.externals.push(
+  //       // Replace "fonts/roboto-mono/Roboto_Mono__700.ttf" with the actual font file path
+  //       // relative to the CSS file that imports it
+  //       "/public/assets/Poppins-Regular.ttf",
+  //       "/public/assets/NoticiaText-Regular.ttf",
+
+  //     );
+  //   }
+  //   return config;
+  // },
 };

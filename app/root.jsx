@@ -12,11 +12,14 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
 } from '@remix-run/react';
+import { ExternalScripts } from "remix-utils/external-scripts";
 import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import { Layout } from '~/components/Layout';
 import tailwindCss from './styles/tailwind.css';
+
+import { Seo } from '@shopify/hydrogen'
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -41,6 +44,7 @@ export function links() {
     { rel: 'stylesheet', href: tailwindCss },
     { rel: 'stylesheet', href: resetStyles },
     { rel: 'stylesheet', href: appStyles },
+
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -116,23 +120,23 @@ export default function App() {
   // console.log('layout data 1:', data)
 
   return (
-    <html lang="en">
+    <html lang="en" suppressContentEditableWarning={true}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Seo />
         <Meta />
         <Links />
+
       </head>
       <body>
-        {
-          console.log('------ root.jsx: client: layout data:', data, '-------------')
 
-        }
-        <Layout {...data}>
+        <Layout {...data} >
           <Outlet />
         </Layout>
 
         <ScrollRestoration nonce={nonce} />
+        <ExternalScripts />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
       </body>
@@ -155,12 +159,19 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
+    <html lang="en" suppressContentEditableWarning={true}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        {/* {
+          <script
+            dangerouslySetInnerHTML={{
+              __html: (`document.querySelectorAll("html > script").forEach((s) => s.parentNode?.removeChild(s));`),
+            }}
+          />
+        } */}
       </head>
       <body>
         <Layout {...rootData}>
@@ -175,6 +186,7 @@ export function ErrorBoundary() {
           </div>
         </Layout>
         <ScrollRestoration nonce={nonce} />
+        <ExternalScripts />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
       </body>
