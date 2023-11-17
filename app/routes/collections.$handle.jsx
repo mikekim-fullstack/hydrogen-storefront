@@ -2,10 +2,11 @@ import { useLoaderData } from '@remix-run/react'
 import { json } from '@shopify/remix-oxygen';
 import ProductGrid from '~/components/ProductGrid';
 
+import { getPaginationVariables } from '@shopify/hydrogen';
 
 
 const seo = ({ data }) => {
-    console.log('---- seo -----')
+    // console.log('---- seo -----')
     return {
         title: data?.collection?.title,
         description: data?.collection?.description.substr(0, 154),
@@ -17,19 +18,23 @@ export const handle = {
 };
 
 export function meta({ data }) {
-    console.log('---- meta -----')
+    // console.log('---- meta -----')
     return [
-        { title: data?.collection?.title ?? 'collection' },
+        { title: data?.collection?.title ?? 'Collection' },
         { description: data?.collection?.description },
     ];
 }
 
 export async function loader({ params, request, context }) {
-    console.log('-----loader---');
+    // console.log('-----loader---');
     const { handle } = params;
     try {
+        const paginationVariables = getPaginationVariables(request, {
+            pageBy: 4,
+        });
         const { collection } = await context.storefront.query(COLLECTION_QUERY, {
             variables: {
+                ...paginationVariables,
                 handle,
             }
         });
@@ -42,7 +47,7 @@ export async function loader({ params, request, context }) {
 }
 export default function Collection() {
     const { collection } = useLoaderData();
-    console.log('collection-data:', collection);
+    // console.log('collection-data:', collection);
 
     return (<>
         <header className='grid w-full gap-8 py-8 justify-items-start'>
@@ -64,14 +69,80 @@ export default function Collection() {
         <ProductGrid collection={collection} url={`/collections/${collection.handle}`} />
     </>);
 }
-
 const COLLECTION_QUERY = `#graphql
-    query CollectionDetails($handle: String!) {
+  query CollectionDetails(
+    $handle: String!
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) {
+    collection(handle: $handle) {
+      id
+      title
+      description
+      handle
+      products(
+        first: $first,
+        last: $last,
+        before: $startCursor,
+        after: $endCursor,
+      ) {
+        nodes {
+          id
+          title
+          publishedAt
+          handle
+          variants(first: 1) {
+            nodes {
+              id
+              image {
+                url
+                altText
+                width
+                height
+              }
+              price {
+                amount
+                currencyCode
+              }
+              compareAtPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          startCursor
+          endCursor
+        }
+      }
+    }
+  }
+
+  `;
+const COLLECTION_QUERY1 = `#graphql
+    query CollectionDetails(
+        $handle: String!
+        $first:Int 
+        $last:Int 
+        $startCursor:String 
+        $endCursor:String 
+        ) {
         collection(handle: $handle){
             title 
             description 
             handle
-            products(first:4){
+            products(
+                first:$first 
+                last:$last 
+                before:$startCursor 
+                after:$endCursor
+                ){
+                #-----------------------
                 nodes{
                     id 
                     title 
@@ -80,19 +151,19 @@ const COLLECTION_QUERY = `#graphql
                     variants(first: 1){
                         nodes{
                             id 
-                            # image subtree
+                            #-- image subtree
                             image{
                                 url 
                                 altText 
                                 width 
                                 height
                             }
-                            # price subtree
+                            #-- price subtree
                             price{
                                 amount 
                                 currencyCode
                             }
-                            # compared price subtree
+                            #-- compared price subtree
                             compareAtPrice{
                                 amount 
                                 currencyCode
@@ -102,6 +173,14 @@ const COLLECTION_QUERY = `#graphql
                         
                     }
                 }
+                #------------------------
+                pageInfo{
+                    hasPreviousPage 
+                    hasNextPage 
+                    startCursor 
+                    endCursor 
+                }
+                #-------------------------
             }
         }
     }

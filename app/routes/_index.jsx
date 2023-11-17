@@ -10,16 +10,16 @@ export function meta() {
 export async function loader({ request, params, context }) {
 
     // console.log('---request', request, '----params', params, '-----context', context)
-    console.log('route-index-loader: url-', request.url)
+    // console.log('route-index-loader: url-', request.url)
 
     return await context.storefront.query(COLLECTIONS_QUERY);
 
 }
 export default function Index() {
     const { collections } = useLoaderData();
-    console.log('loaderData: ', collections);
+    // console.log('loaderData: ', collections);
     return (
-        <section className="  w-full gap-4 font-[Poppins-light]" >
+        <section className=" grid w-full gap-4 font-[Poppins-light]" >
             {/* Test whiteSpace */}
             {/* <div className="whitespace-pre" style={{ whiteSpace: 'pre-line' }}>
                 {
@@ -34,9 +34,11 @@ export default function Index() {
             <h2 className="whitespace-pre-wrap max-w-prose font-[Poppins-bold] text-xl text-left">
                 {`Collections`}
             </h2>
+            {console.log(collections.nodes.length)}
             <div className={`grid grid-flow-row gap-2 gap-y-6 
-                            sm:grid-cols-${collections.nodes.length}
+                            sm:grid-cols-2
                             md:gap-4
+                            lg:grid-cols-3
                             lg:gap-6
             `}>
                 {

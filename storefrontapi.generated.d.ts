@@ -131,6 +131,14 @@ export type FeaturedCollectionsQuery = {
 
 export type CollectionDetailsQueryVariables = StorefrontAPI.Exact<{
   handle: StorefrontAPI.Scalars['String']['input'];
+  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
 export type CollectionDetailsQuery = {
@@ -159,6 +167,10 @@ export type CollectionDetailsQuery = {
               >;
             };
           }
+        >;
+        pageInfo: Pick<
+          StorefrontAPI.PageInfo,
+          'hasPreviousPage' | 'hasNextPage' | 'startCursor' | 'endCursor'
         >;
       };
     }
@@ -280,7 +292,7 @@ interface GeneratedQueryTypes {
     return: FeaturedCollectionsQuery;
     variables: FeaturedCollectionsQueryVariables;
   };
-  '#graphql\n    query CollectionDetails($handle: String!) {\n        collection(handle: $handle){\n            title \n            description \n            handle\n            products(first:4){\n                nodes{\n                    id \n                    title \n                    publishedAt \n                    handle \n                    variants(first: 1){\n                        nodes{\n                            id \n                            # image subtree\n                            image{\n                                url \n                                altText \n                                width \n                                height\n                            }\n                            # price subtree\n                            price{\n                                amount \n                                currencyCode\n                            }\n                            # compared price subtree\n                            compareAtPrice{\n                                amount \n                                currencyCode\n                            }\n\n                        }\n                        \n                    }\n                }\n            }\n        }\n    }\n': {
+  '#graphql\n    query CollectionDetails(\n        $handle: String!\n        $first:Int \n        $last:Int \n        $startCursor:String \n        $endCursor:String \n        ) {\n        collection(handle: $handle){\n            title \n            description \n            handle\n            products(\n                first:$first \n                last:$last \n                before:$startCursor \n                after:$endCursor\n                ){\n                #-----------------------\n                nodes{\n                    id \n                    title \n                    publishedAt \n                    handle \n                    variants(first: 1){\n                        nodes{\n                            id \n                            #-- image subtree\n                            image{\n                                url \n                                altText \n                                width \n                                height\n                            }\n                            #-- price subtree\n                            price{\n                                amount \n                                currencyCode\n                            }\n                            #-- compared price subtree\n                            compareAtPrice{\n                                amount \n                                currencyCode\n                            }\n\n                        }\n                        \n                    }\n                }\n                #------------------------\n                pageInfo{\n                    hasPreviousPage \n                    hasNextPage \n                    startCursor \n                    endCursor \n                }\n                #-------------------------\n            }\n        }\n    }\n': {
     return: CollectionDetailsQuery;
     variables: CollectionDetailsQueryVariables;
   };
